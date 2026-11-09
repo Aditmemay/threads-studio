@@ -1,25 +1,153 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><title>Threads Studio</title><style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080e1b;color:#eef3ff;font:16px system-ui,-apple-system,Segoe UI,sans-serif}header{padding:22px 18px;background:#14213a;border-bottom:1px solid #293750;position:sticky;top:0;z-index:2}h1{margin:0;font-size:24px}header p{margin:5px 0 0;color:#a9bddb;font-size:13px}main{max-width:760px;margin:auto;padding:15px}.card{background:#17243a;border:1px solid #2c3c58;border-radius:17px;padding:17px;margin:14px 0;box-shadow:0 8px 22px #0002}h2{margin:0 0 13px;color:#80b1ff;font-size:21px}label{display:block;font-weight:650;margin:13px 0 7px}input,textarea,select{width:100%;padding:13px;border:1px solid #50617d;border-radius:10px;background:#0b1528;color:#fff;font:inherit}textarea{min-height:120px;resize:vertical}button{width:100%;padding:14px;border:0;border-radius:10px;background:#2878ed;color:white;font-weight:750;font-size:15px;margin-top:10px}button.secondary{background:#34445e}button:disabled{opacity:.55}.muted{color:#a9bbd6;font-size:14px;line-height:1.5}.status{padding:12px;border-radius:10px;background:#0b1528;color:#bbcae1;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin-top:10px}.reply{display:flex;gap:10px;padding:11px;border:1px solid #344760;border-radius:10px;margin-top:9px;align-items:flex-start}.reply input{width:auto;margin-top:3px}.reply p{margin:0;line-height:1.45;overflow-wrap:anywhere}.row{display:flex;gap:10px}.row>*{flex:1}video{width:100%;background:#000;border-radius:12px;margin-top:10px;max-height:65vh}audio{width:100%;margin-top:10px}.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#263d5e;color:#9fc4ff;font-size:12px}.warn{color:#ffcf8a}.good{color:#a3e7be}.foot{text-align:center;color:#8da2bf;font-size:12px;padding:18px}.hidden{display:none}
-</style></head><body><header><h1>🎬 Threads Studio</h1><p>Tạo video đọc bình luận Threads</p></header><main>
-<section class="card"><h2>01. Kết nối Threads</h2><p class="muted">Kết nối tài khoản Threads của bạn. Ứng dụng chỉ đọc phản hồi trên bài viết thuộc tài khoản đã cấp quyền.</p><div class="row"><button id="connect">Kết nối Threads</button><button id="logout" class="secondary">Ngắt kết nối</button></div><div id="auth" class="status">Đang kiểm tra kết nối...</div></section>
-<section class="card"><h2>02. Lấy bình luận tự động</h2><label for="url">Link bài viết Threads của bạn</label><input id="url" inputmode="url" placeholder="https://www.threads.net/@ten/post/..."><button id="load">Lấy bình luận</button><div id="comments" class="status">Sau khi kết nối Threads, dán link bài viết của chính tài khoản bạn.</div><div id="selection" class="hidden"><p class="muted">Chọn bình luận muốn đọc:</p><div id="replies"></div><button id="useSelected" class="secondary">Đưa bình luận đã chọn vào nội dung đọc</button></div></section>
-<section class="card"><h2>03. Giọng đọc Adam</h2><p class="muted">Giọng Adam dùng API bên ngoài nếu đã được cấu hình hợp lệ trên máy chủ. Khi chưa cấu hình, bạn vẫn có thể nghe thử bằng giọng đọc tiếng Việt của thiết bị.</p><label for="speed">Tốc độ đọc</label><input id="speed" type="range" min="0.75" max="1.25" step="0.05" value="1"><label for="script">Nội dung đọc</label><textarea id="script" placeholder="Chọn bình luận phía trên hoặc nhập nội dung... "></textarea><button id="makeVoice">Tạo giọng Adam MP3</button><button id="deviceVoice" class="secondary">Nghe thử bằng giọng thiết bị</button><audio id="audio" controls class="hidden"></audio><div id="voiceStatus" class="status">Adam chưa được xác nhận cấu hình trên máy chủ.</div></section>
-<section class="card"><h2>04. Tạo video dọc</h2><label for="bg">Video nền (trên điện thoại)</label><input id="bg" type="file" accept="video/*,image/*"><label for="resolution">Độ phân giải đầu ra</label><select id="resolution"><option value="1080">1080p (nặng hơn trên điện thoại)</option><option value="720">720p (nhẹ hơn)</option></select><button id="previewBg" class="secondary">Xem video nền</button><video id="player" controls playsinline></video><button id="export">Xuất video WebM có âm thanh</button><div id="exportStatus" class="status">Để ghép tiếng vào video, cần có file MP3 từ phần giọng đọc Adam. MP4 chưa được bật trong bản này.</div></section>
-<section class="card"><h2>Trạng thái hệ thống</h2><div id="health" class="status">Đang kiểm tra...</div><p class="muted">Không gửi mật khẩu Threads, Meta App Secret hoặc API key trong cuộc trò chuyện. Chỉ nhập khóa bí mật vào mục Environment của máy chủ.</p></section>
-<p class="foot">Threads Studio • Bản thử nghiệm cá nhân</p></main>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Threads Studio 2.0</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080e1b;color:#eef3ff;font:16px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px 18px;background:#14213a;border-bottom:1px solid #293750}h1{margin:0;font-size:25px}header p{margin:5px 0 0;color:#a9bddb}
+main{max-width:760px;margin:auto;padding:14px}.card{background:#17243a;border:1px solid #2c3c58;border-radius:17px;padding:17px;margin:14px 0}
+h2{margin:0 0 12px;color:#80b1ff;font-size:21px}label{display:block;font-weight:650;margin:13px 0 7px}
+input,textarea,select{width:100%;padding:13px;border:1px solid #50617d;border-radius:10px;background:#0b1528;color:#fff;font:inherit}
+textarea{min-height:155px;resize:vertical}button{width:100%;padding:14px;border:0;border-radius:10px;background:#2878ed;color:white;font-weight:750;font-size:15px;margin-top:10px}
+button.secondary{background:#34445e}button:disabled{opacity:.55}.muted{color:#a9bbd6;font-size:14px;line-height:1.5}
+.status{padding:12px;border-radius:10px;background:#0b1528;color:#bbcae1;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin-top:10px}
+.notice{border-left:3px solid #e7ad52;padding:10px 12px;background:#2b251a;color:#f5d9a5;border-radius:7px;font-size:14px;line-height:1.5}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}.reply{padding:10px;border:1px solid #344760;border-radius:10px;margin-top:8px;line-height:1.45;overflow-wrap:anywhere}
+.reply small{color:#9bb3d5}.hidden{display:none}video{width:100%;max-height:260px;object-fit:contain;background:#05080e;border-radius:10px;margin-top:10px}
+.foot{text-align:center;color:#8da2bf;font-size:12px;padding:18px}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#263d5e;color:#9fc4ff;font-size:12px}
+@media(max-width:480px){.row{flex-direction:column;gap:0}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<header><h1>🎬 Threads Studio 2.0</h1><p>Tạo video đọc bình luận • Không cần đăng nhập • Ưu tiên miễn phí</p></header>
+<main>
+<section class="card">
+<h2>01. Mở bài viết Threads</h2>
+<label for="postUrl">Link bài viết Threads</label>
+<input id="postUrl" type="url" inputmode="url" placeholder="https://www.threads.net/@ten/post/..." autocomplete="url">
+<button id="openPost">Mở bài viết Threads</button>
+<div class="notice" style="margin-top:12px">Threads không cung cấp API công khai để lấy bình luận của mọi bài viết chỉ bằng link khi chưa đăng nhập/cấp quyền. Vì vậy bản miễn phí không giả vờ tự lấy bình luận. Bạn mở bài viết, sao chép bình luận công khai rồi dán vào bước 2. Không cần mật khẩu hoặc kết nối tài khoản.</div>
+</section>
+<section class="card">
+<h2>02. Thêm bình luận</h2>
+<label for="comments">Dán bình luận (mỗi bình luận một dòng)</label>
+<textarea id="comments" placeholder="Bạn nói đúng quá!
+Mình cũng từng gặp trường hợp này.
+Cho mình xin thêm thông tin với..."></textarea>
+<div class="row"><button id="previewComments" class="secondary">Xem trước nội dung</button><button id="clearComments" class="secondary">Xóa nội dung</button></div>
+<div id="commentPreview" class="status">Chưa có bình luận.</div>
+</section>
+<section class="card">
+<h2>03. Thiết lập video</h2>
+<label for="videoTitle">Tiêu đề video</label><input id="videoTitle" maxlength="90" value="BÌNH LUẬN THREADS">
+<label for="background">Ảnh hoặc video nền (không bắt buộc)</label><input id="background" type="file" accept="image/*,video/*">
+<label for="audioFile">File giọng đọc / nhạc nền (MP3, WAV, M4A) – không bắt buộc</label><input id="audioFile" type="file" accept="audio/*">
+<p class="muted">Không có file âm thanh thì video xuất ra sẽ không có tiếng. Bản này không dùng API trả phí. Bạn có thể nghe thử bằng giọng đọc có sẵn trên điện thoại.</p>
+<label for="seconds">Thời gian mỗi bình luận khi không có âm thanh</label>
+<select id="seconds"><option value="3">3 giây</option><option value="4" selected>4 giây</option><option value="5">5 giây</option><option value="6">6 giây</option></select>
+<label for="quality">Chất lượng video</label>
+<select id="quality"><option value="720">720p – nhẹ, phù hợp điện thoại</option><option value="1080">1080p – nét hơn, cần máy khỏe</option></select>
+<div class="row"><button id="previewVoice" class="secondary">Nghe đọc thử bằng giọng máy</button><button id="stopVoice" class="secondary">Dừng giọng đọc</button></div>
+</section>
+<section class="card">
+<h2>04. Xuất video</h2>
+<button id="export">Tạo và tải video</button>
+<div id="exportStatus" class="status">Video dọc 9:16, định dạng MP4 nếu trình duyệt hỗ trợ; nếu không sẽ là WebM.</div>
+<video id="resultVideo" controls playsinline class="hidden"></video>
+<a id="download" class="hidden" style="display:block;color:#9fc4ff;margin-top:12px" download>Tải video đã tạo</a>
+</section>
+<section class="card"><h2>Trạng thái</h2><div class="status">● Ứng dụng chạy độc lập
+Không cần Meta for Developers.
+Không cần Threads OAuth.
+Không cần ElevenLabs API.
+Không thu thập mật khẩu hoặc thông tin đăng nhập.
+Xử lý nội dung và xuất video ngay trên trình duyệt.</div></section>
+<p class="foot">Threads Studio 2.0 • Bản miễn phí • Bình luận do người dùng cung cấp</p>
+</main>
 <script>
-const $=id=>document.getElementById(id);let loadedReplies=[];let mp3Blob=null;let bgUrl=null;
-async function api(path,options={}){const r=await fetch(path,{...options,credentials:'same-origin'});const type=r.headers.get('content-type')||'';if(type.includes('audio/'))return r;if(type.includes('application/json')){const j=await r.json();if(!r.ok)throw new Error(j.error||'Yêu cầu thất bại');return j;}const txt=await r.text();if(!r.ok)throw new Error(txt.slice(0,350)||'Yêu cầu thất bại');return {text:txt};}
-async function refresh(){try{const [h,m]=await Promise.all([api('/api/health'),api('/api/me')]);$('health').innerHTML=`Máy chủ: <b class="good">đang hoạt động</b>\nThreads API: ${h.threadsConfigured?'đã có cấu hình':'chưa cấu hình Meta App'}\nAdam TTS: ${h.voiceConfigured?'đã có cấu hình':'chưa có API key/Voice ID'}\nXuất video: MP4 nếu trình duyệt hỗ trợ; nếu không sẽ dùng WebM.`;$('auth').textContent=m.connected?`Đã kết nối Threads: @${m.username||'tài khoản'}`:'Chưa kết nối Threads.';$('connect').textContent=m.connected?'Đã kết nối Threads':'Kết nối Threads';$('voiceStatus').textContent=h.voiceConfigured?'Máy chủ đã nhận cấu hình giọng đọc.':'Adam chưa được cấu hình. Có thể nghe thử bằng giọng thiết bị.';}catch(e){$('health').textContent='Chưa kết nối được máy chủ API. Mở bản Render Web Service để dùng API.\n'+e.message;$('auth').textContent='Chưa thể kiểm tra trạng thái Threads.';}}
-$('connect').onclick=()=>location.href='/auth/threads';$('logout').onclick=async()=>{location.href='/api/logout'};
-$('load').onclick=async()=>{ $('load').disabled=true;$('comments').textContent='Đang lấy bình luận...';try{const j=await api('/api/replies',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:$('url').value.trim()})});loadedReplies=j.replies||[];$('comments').textContent=`Bài viết: ${j.post?.text||j.post?.permalink||'Đã tìm thấy'}\nĐã lấy ${loadedReplies.length} bình luận.`;$('replies').innerHTML='';loadedReplies.forEach((c,i)=>{const row=document.createElement('label');row.className='reply';const cb=document.createElement('input');cb.type='checkbox';cb.dataset.index=String(i);const txt=document.createElement('p');txt.textContent=(c.username?'@'+c.username+': ':'')+c.text+(c.timestamp?' · '+c.timestamp:'');row.append(cb,txt);$('replies').append(row)});$('selection').classList.toggle('hidden',!loadedReplies.length);}catch(e){$('comments').textContent=e.message;}finally{$('load').disabled=false;}};
-$('useSelected').onclick=()=>{const picked=[...$('replies').querySelectorAll('input:checked')].map(cb=>loadedReplies[Number(cb.dataset.index)]).filter(Boolean);$('script').value=picked.map(c=>(c.username?'@'+c.username+': ':'')+c.text).join('\n\n');if(!picked.length)alert('Bạn chưa chọn bình luận nào.');};
-$('makeVoice').onclick=async()=>{const text=$('script').value.trim();if(!text)return alert('Nhập hoặc chọn nội dung trước.');$('voiceStatus').textContent='Đang tạo giọng Adam...';$('makeVoice').disabled=true;try{const r=await api('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});mp3Blob=await r.blob();if(!mp3Blob.size)throw new Error('File âm thanh rỗng.');$('audio').src=URL.createObjectURL(mp3Blob);$('audio').classList.remove('hidden');$('voiceStatus').textContent='Đã tạo file MP3. Bạn có thể nghe và dùng để ghép video.';}catch(e){$('voiceStatus').textContent=e.message;}finally{$('makeVoice').disabled=false;}};
-$('deviceVoice').onclick=()=>{const text=$('script').value.trim();if(!text)return alert('Chưa có nội dung.');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';u.rate=Number($('speed').value);speechSynthesis.speak(u);};
-$('previewBg').onclick=()=>{const f=$('bg').files[0];if(!f)return alert('Chọn video hoặc ảnh nền trước.');if(bgUrl)URL.revokeObjectURL(bgUrl);bgUrl=URL.createObjectURL(f);if(f.type.startsWith('video/')){$('player').src=bgUrl;$('player').classList.remove('hidden');$('player').play().catch(()=>{});}else{$('player').classList.add('hidden');$('exportStatus').textContent='Đã chọn ảnh nền. Bản xuất video cần MP3.';}};
-function drawWrapped(ctx,text,x,y,maxWidth,lineHeight){const words=text.split(/\s+/);let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=word;y+=lineHeight;}else line=test;}if(line)ctx.fillText(line,x,y);}
-$('export').onclick=async()=>{if(!mp3Blob)return alert('Hãy tạo file giọng đọc MP3 trước.');if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream)return alert('Trình duyệt này chưa hỗ trợ xuất video. Hãy thử Chrome/Cốc Cốc bản mới.');const file=$('bg').files[0];if(!file)return alert('Chọn video hoặc ảnh nền trước.');const canvas=document.createElement('canvas');const size=Number($('resolution').value);canvas.width=size===1080?1080:720;canvas.height=size===1080?1920:1280;const ctx=canvas.getContext('2d');let video=null,img=null;if(file.type.startsWith('video/')){video=document.createElement('video');video.src=URL.createObjectURL(file);video.muted=true;video.loop=true;video.playsInline=true;await new Promise((resolve,reject)=>{video.onloadeddata=resolve;video.onerror=reject;});await video.play();}else{img=new Image();img.src=URL.createObjectURL(file);await img.decode();}
-const audioEl=new Audio(URL.createObjectURL(mp3Blob));audioEl.preload='auto';await new Promise((resolve,reject)=>{audioEl.oncanplaythrough=resolve;audioEl.onerror=reject;});const ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const source=ac.createMediaElementSource(audioEl);const dest=ac.createMediaStreamDestination();source.connect(dest);source.connect(ac.destination);const stream=canvas.captureStream(30);dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));const mime=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));if(!mime)return alert('Không tìm thấy định dạng ghi video được hỗ trợ.');const recorder=new MediaRecorder(stream,{mimeType:mime});const chunks=[];recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};const text=$('script').value.trim();const draw=()=>{ctx.fillStyle='#101827';ctx.fillRect(0,0,canvas.width,canvas.height);const sourceW=video?.videoWidth||img?.naturalWidth||1,sourceH=video?.videoHeight||img?.naturalHeight||1;const scale=Math.max(canvas.width/sourceW,canvas.height/sourceH),w=sourceW*scale,h=sourceH*scale;ctx.save();ctx.beginPath();ctx.rect(0,0,canvas.width,canvas.height);ctx.clip();if(video)ctx.drawImage(video,(canvas.width-w)/2,(canvas.height-h)/2,w,h);else ctx.drawImage(img,(canvas.width-w)/2,(canvas.height-h)/2,w,h);ctx.restore();ctx.fillStyle='rgba(0,0,0,.56)';ctx.fillRect(24,canvas.height-300,canvas.width-48,250);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 31px Arial';ctx.shadowColor='#000';ctx.shadowBlur=5;drawWrapped(ctx,text,canvas.width/2,canvas.height-220,canvas.width-100,42);ctx.shadowBlur=0;};let raf;const loop=()=>{draw();raf=requestAnimationFrame(loop)};loop();recorder.start(250);$('exportStatus').textContent='Đang ghi video... không đóng trang cho đến khi tải xong.';audioEl.onended=()=>recorder.stop();recorder.onstop=()=>{cancelAnimationFrame(raf);if(video)video.pause();const blob=new Blob(chunks,{type:'video/webm'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);const isMp4=blob.type.includes('mp4');a.download=isMp4?'threads-studio-video.mp4':'threads-studio-video.webm';a.click();$('exportStatus').textContent=isMp4?'Đã xuất video MP4 '+size+'p.':'Trình duyệt này chỉ hỗ trợ WebM; đã xuất video '+size+'p dạng WebM.';ac.close();};await audioEl.play();};
-refresh();
-</script></body></html>
+const $=id=>document.getElementById(id);
+let resultUrl=null;
+function getComments(){return $('comments').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,100);}
+$('openPost').onclick=()=>{
+  try{
+    const u=new URL($('postUrl').value.trim());
+    if(!['threads.net','www.threads.net','threads.com','www.threads.com'].includes(u.hostname.toLowerCase())||u.protocol!=='https:')throw Error();
+    window.open(u.href,'_blank','noopener');
+  }catch{$('exportStatus').textContent='Link không hợp lệ. Hãy dùng link HTTPS từ threads.net hoặc threads.com.';}
+};
+$('previewComments').onclick=()=>{
+  const items=getComments(), box=$('commentPreview');box.innerHTML='';
+  if(!items.length){box.textContent='Chưa có bình luận.';return;}
+  const badge=document.createElement('span');badge.className='pill';badge.textContent=items.length+' bình luận';box.append(badge);
+  items.forEach((item,i)=>{const d=document.createElement('div');d.className='reply';const n=document.createElement('small');n.textContent='Bình luận '+(i+1);const p=document.createElement('div');p.textContent=item;d.append(n,document.createElement('br'),p);box.append(d);});
+};
+$('clearComments').onclick=()=>{$('comments').value='';$('commentPreview').textContent='Đã xóa nội dung.';};
+$('previewVoice').onclick=()=>{
+  const items=getComments();if(!items.length){alert('Hãy dán bình luận trước.');return;}
+  if(!('speechSynthesis'in window)){alert('Trình duyệt không hỗ trợ đọc văn bản.');return;}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(items.join('. '));u.lang='vi-VN';u.rate=1;speechSynthesis.speak(u);
+};
+$('stopVoice').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();};
+function drawCover(ctx,source,w,h,sw,sh){const scale=Math.max(w/sw,h/sh),dw=sw*scale,dh=sh*scale;ctx.drawImage(source,(w-dw)/2,(h-dh)/2,dw,dh);}
+function wrapText(ctx,text,maxWidth){const words=text.split(/\s+/),lines=[];let line='';for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>maxWidth&&line){lines.push(line);line=word;}else line=next;}if(line)lines.push(line);return lines;}
+$('export').onclick=async()=>{
+ const items=getComments();if(!items.length){alert('Hãy dán ít nhất một bình luận.');return;}
+ if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){alert('Trình duyệt chưa hỗ trợ xuất video. Hãy cập nhật Chrome hoặc Cốc Cốc.');return;}
+ const file=$('background').files[0],audioFile=$('audioFile').files[0],size=Number($('quality').value);
+ const canvas=document.createElement('canvas');canvas.width=size===1080?1080:720;canvas.height=size===1080?1920:1280;
+ const ctx=canvas.getContext('2d');let bg=null,bgVideo=null,bgUrl=null,audioContext=null;
+ $('export').disabled=true;
+ try{
+  if(file){
+    bgUrl=URL.createObjectURL(file);
+    if(file.type.startsWith('video/')){
+      bgVideo=document.createElement('video');bgVideo.src=bgUrl;bgVideo.muted=true;bgVideo.loop=true;bgVideo.playsInline=true;
+      await new Promise((resolve,reject)=>{bgVideo.onloadeddata=resolve;bgVideo.onerror=reject;});await bgVideo.play();
+    }else{bg=new Image();bg.src=bgUrl;await bg.decode();}
+  }
+  let audioEl=null,audioDestination=null;
+  if(audioFile){
+    audioEl=new Audio(URL.createObjectURL(audioFile));audioEl.preload='auto';
+    await new Promise((resolve,reject)=>{audioEl.oncanplaythrough=resolve;audioEl.onerror=reject;});
+    audioContext=new(window.AudioContext||window.webkitAudioContext)();await audioContext.resume();
+    const source=audioContext.createMediaElementSource(audioEl);audioDestination=audioContext.createMediaStreamDestination();source.connect(audioDestination);source.connect(audioContext.destination);
+  }
+  const stream=canvas.captureStream(30);if(audioDestination)audioDestination.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+  const types=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+  const mime=types.find(t=>MediaRecorder.isTypeSupported(t));if(!mime)throw Error('Thiết bị không hỗ trợ định dạng xuất video.');
+  const recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:size===1080?5000000:2500000}),chunks=[];
+  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+  const title=$('videoTitle').value.trim(),per=Number($('seconds').value)*1000,total=items.length*per;
+  let start=performance.now(),raf=0,stopped=false;
+  const render=now=>{
+    const elapsed=now-start;
+    const idx=audioEl?Math.min(items.length-1,Math.floor((elapsed/Math.max(1,audioEl.duration*1000))*items.length)):Math.min(items.length-1,Math.floor(elapsed/per));
+    ctx.fillStyle='#111827';ctx.fillRect(0,0,canvas.width,canvas.height);
+    if(bgVideo&&bgVideo.readyState>=2)drawCover(ctx,bgVideo,canvas.width,canvas.height,bgVideo.videoWidth,bgVideo.videoHeight);
+    else if(bg)drawCover(ctx,bg,canvas.width,canvas.height,bg.naturalWidth,bg.naturalHeight);
+    else{const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);g.addColorStop(0,'#14213a');g.addColorStop(1,'#321d4a');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);}
+    ctx.fillStyle='rgba(0,0,0,.48)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.textAlign='center';ctx.shadowColor='#000';ctx.shadowBlur=8;ctx.fillStyle='#9fc4ff';ctx.font='bold '+Math.round(canvas.width*.047)+'px Arial';ctx.fillText(title||'BÌNH LUẬN THREADS',canvas.width/2,canvas.height*.17);
+    ctx.font='bold '+Math.round(canvas.width*.052)+'px Arial';const lines=wrapText(ctx,items[idx],canvas.width*.78),lh=canvas.width*.075,boxH=lines.length*lh+canvas.height*.10,top=(canvas.height-boxH)/2;
+    ctx.fillStyle='rgba(5,10,20,.80)';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(canvas.width*.07,top,canvas.width*.86,boxH,26);else ctx.rect(canvas.width*.07,top,canvas.width*.86,boxH);ctx.fill();
+    ctx.fillStyle='#fff';lines.forEach((line,j)=>ctx.fillText(line,canvas.width/2,top+canvas.height*.055+j*lh));ctx.shadowBlur=0;
+    ctx.fillStyle='#dce8ff';ctx.font=Math.round(canvas.width*.03)+'px Arial';ctx.fillText((idx+1)+' / '+items.length,canvas.width/2,canvas.height*.91);
+    if(!stopped)raf=requestAnimationFrame(render);
+  };
+  const stop=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(raf);if(recorder.state!=='inactive')recorder.stop();if(bgVideo)bgVideo.pause();};
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:recorder.mimeType});if(resultUrl)URL.revokeObjectURL(resultUrl);resultUrl=URL.createObjectURL(blob);
+    $('resultVideo').src=resultUrl;$('resultVideo').classList.remove('hidden');const ext=blob.type.includes('mp4')?'mp4':'webm';
+    $('download').href=resultUrl;$('download').download='threads-studio-2.0.'+ext;$('download').textContent='⬇ Tải video '+ext.toUpperCase();$('download').classList.remove('hidden');
+    $('exportStatus').textContent='Hoàn tất! Video '+size+'p đã được tạo. Định dạng: '+ext.toUpperCase()+'.';
+    $('export').disabled=false;if(audioContext)audioContext.close();if(bgUrl)URL.revokeObjectURL(bgUrl);
+  };
+  recorder.start(250);raf=requestAnimationFrame(render);$('exportStatus').textContent='Đang tạo video... giữ trang mở đến khi hoàn tất.';
+  if(audioEl){audioEl.onended=stop;await audioEl.play();}else{setTimeout(stop,total);}
+ }catch(err){$('exportStatus').textContent='Không thể xuất video: '+err.message;$('export').disabled=false;if(bgUrl)URL.revokeObjectURL(bgUrl);if(audioContext)audioContext.close();}
+};
+</script>
+</body></html>
