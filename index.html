@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threads Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080e1b;color:white;font-family:Arial,sans-serif}
+header{padding:20px;background:#14213a;font-size:23px;font-weight:bold}
+main{padding:16px;max-width:650px;margin:auto}
+.card{background:#17243a;padding:17px;border-radius:14px;margin:15px 0}
+h3{margin-top:0;color:#76aaff}
+input,textarea,select{width:100%;padding:13px;margin:8px 0;background:#0b1528;color:white;border:1px solid #425574;border-radius:8px}
+textarea{height:120px}
+button{width:100%;padding:13px;border:0;border-radius:9px;background:#2878ed;color:white;font-weight:bold;margin-top:9px}
+button.secondary{background:#34445e}
+#status{color:#9db7da;font-size:13px}
+video{width:100%;margin-top:12px;border-radius:10px}
+</style>
+</head>
+<body>
+<header>🎬 Threads Studio</header>
+<main>
+<div class="card">
+<h3>01. Threads</h3>
+<input id="url" placeholder="Dán link bài viết Threads">
+<button onclick="getComments()">Lấy bình luận</button>
+<p id="status">Chưa kết nối máy chủ Threads.</p>
+</div>
+
+<div class="card">
+<h3>02. Nội dung đọc</h3>
+<textarea id="text" placeholder="Nội dung bình luận sẽ hiển thị ở đây..."></textarea>
+<button class="secondary" onclick="readText()">▶ Nghe thử</button>
+</div>
+
+<div class="card">
+<h3>03. Giọng đọc</h3>
+<select id="voice">
+<option value="adam">Adam - ElevenLabs (cần API)</option>
+<option value="device">Giọng đọc thiết bị</option>
+</select>
+<label>Tốc độ đọc</label>
+<input id="speed" type="range" min="0.7" max="1.4" step="0.1" value="1">
+</div>
+
+<div class="card">
+<h3>04. Video nền</h3>
+<input type="file" id="videoFile" accept="video/*">
+<video id="preview" controls playsinline></video>
+<button onclick="previewVideo()">Xem video</button>
+<button onclick="exportVideo()">Xuất video</button>
+<p id="exportStatus"></p>
+</div>
+</main>
+
+<script>
+function getComments(){
+ const url=document.getElementById('url').value;
+ if(!url.includes('threads.net')){
+  alert('Vui lòng nhập link Threads hợp lệ');
+  return;
+ }
+ document.getElementById('status').innerText=
+ 'Cần kết nối máy chủ Threads API và cấp quyền đọc bình luận.';
+}
+function readText(){
+ const text=document.getElementById('text').value;
+ if(!text.trim())return alert('Chưa có nội dung');
+ speechSynthesis.cancel();
+ const speech=new SpeechSynthesisUtterance(text);
+ speech.lang='vi-VN';
+ speech.rate=Number(document.getElementById('speed').value);
+ speechSynthesis.speak(speech);
+}
+function previewVideo(){
+ const file=document.getElementById('videoFile').files[0];
+ if(!file)return alert('Hãy chọn video nền');
+ document.getElementById('preview').src=URL.createObjectURL(file);
+}
+function exportVideo(){
+ document.getElementById('exportStatus').innerText=
+ 'Chức năng xuất MP4 cần máy chủ xử lý video.';
+}
+</script>
+</body>
+</html>
