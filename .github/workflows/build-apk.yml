@@ -31,7 +31,7 @@ jobs:
           SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
 
           if [ -z "$SDKMANAGER" ]; then
-            echo "Cannot find Android SDK manager"
+            echo "Android SDK manager not found"
             exit 1
           fi
 
@@ -52,43 +52,97 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      
+      - name: Extract Android project
+        shell: bash
+        run: |
+          test -f FloatingToolsAndroid_source.zip
+          unzip -q FloatingToolsAndroid_source.zip -d .
+          echo "Project extracted"
+
       - name: Fix Java and Kotlin JVM target
+        shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
-          p = Path("FloatingToolsAndroid/app/build.gradle")
+          files = list(Path(".").rglob("app/build.gradle"))
+
+          if not files:
+              raise SystemExit("Cannot find app/build.gradle")
+
+          p = files[0]
+          print("Editing:", p)
+
           s = p.read_text()
 
-          needle = "    defaultConfig {"
-          insert = """    compileOptions {
+          if not re.search(r'android\s*\{', s):
+              raise SystemExit("Cannot find android block")
+
+          compile_block = """compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
                   targetCompatibility JavaVersion.VERSION_17
-              }
+              }"""
 
-              kotlinOptions {
+          kotlin_block = """kotlinOptions {
                   jvmTarget = '17'
-              }
+              }"""
 
-          """
+          if re.search(r'compileOptions\s*\{[^}]*\}', s, re.S):
+              s = re.sub(
+                  r'compileOptions\s*\{[^}]*\}',
+                  compile_block,
+                  s,
+                  count=1,
+                  flags=re.S
+              )
+          else:
+              s = re.sub(
+                  r'(android\s*\{)',
+                  r'\1\n    ' + compile_block,
+                  s,
+                  count=1
+              )
 
-          if needle not in s:
-              raise SystemExit("Cannot find defaultConfig in app/build.gradle")
+          if re.search(r'kotlinOptions\s*\{[^}]*\}', s, re.S):
+              s = re.sub(
+                  r'kotlinOptions\s*\{[^}]*\}',
+                  kotlin_block,
+                  s,
+                  count=1,
+                  flags=re.S
+              )
+          else:
+              s = re.sub(
+                  r'(android\s*\{)',
+                  r'\1\n    ' + kotlin_block,
+                  s,
+                  count=1
+              )
 
-          s = s.replace(needle, insert + needle, 1)
           p.write_text(s)
           print("Java and Kotlin targets set to 17")
           PY
 
-
       - name: Build debug APK
-        working-directory: FloatingToolsAndroid
-        run: gradle assembleDebug
+        shell: bash
+        run: |
+          APP_GRADLE="$(find . -path '*/app/build.gradle' -type f | head -n 1)"
+
+          if [ -z "$APP_GRADLE" ]; then
+            echo "App Gradle file not found"
+            exit 1
+          fi
+
+          PROJECT_DIR="$(dirname "$(dirname "$APP_GRADLE")")"
+
+          echo "Building project: $PROJECT_DIR"
+
+          gradle -p "$PROJECT_DIR" assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: floating-tools-debug-apk
-          path: FloatingToolsAndroid/app/build/outputs/apk/debug/app-debug.apk
+          path: '**/build/outputs/apk/debug/*.apk'
           if-no-files-found: error
