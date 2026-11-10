@@ -52,8 +52,35 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Extract Android project
-        run: unzip -q FloatingToolsAndroid_source.zip -d .
+      
+      - name: Fix Java and Kotlin JVM target
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("FloatingToolsAndroid/app/build.gradle")
+          s = p.read_text()
+
+          needle = "    defaultConfig {"
+          insert = """    compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+
+          """
+
+          if needle not in s:
+              raise SystemExit("Cannot find defaultConfig in app/build.gradle")
+
+          s = s.replace(needle, insert + needle, 1)
+          p.write_text(s)
+          print("Java and Kotlin targets set to 17")
+          PY
+
 
       - name: Build debug APK
         working-directory: FloatingToolsAndroid
