@@ -1,153 +1,67 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101827">
-<title>Threads Studio 2.0</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b14">
+<title>TUANANH SHOP | Blox Fruits Services</title>
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080e1b;color:#eef3ff;font:16px system-ui,-apple-system,Segoe UI,sans-serif}
-header{padding:22px 18px;background:#14213a;border-bottom:1px solid #293750}h1{margin:0;font-size:25px}header p{margin:5px 0 0;color:#a9bddb}
-main{max-width:760px;margin:auto;padding:14px}.card{background:#17243a;border:1px solid #2c3c58;border-radius:17px;padding:17px;margin:14px 0}
-h2{margin:0 0 12px;color:#80b1ff;font-size:21px}label{display:block;font-weight:650;margin:13px 0 7px}
-input,textarea,select{width:100%;padding:13px;border:1px solid #50617d;border-radius:10px;background:#0b1528;color:#fff;font:inherit}
-textarea{min-height:155px;resize:vertical}button{width:100%;padding:14px;border:0;border-radius:10px;background:#2878ed;color:white;font-weight:750;font-size:15px;margin-top:10px}
-button.secondary{background:#34445e}button:disabled{opacity:.55}.muted{color:#a9bbd6;font-size:14px;line-height:1.5}
-.status{padding:12px;border-radius:10px;background:#0b1528;color:#bbcae1;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin-top:10px}
-.notice{border-left:3px solid #e7ad52;padding:10px 12px;background:#2b251a;color:#f5d9a5;border-radius:7px;font-size:14px;line-height:1.5}
-.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}.reply{padding:10px;border:1px solid #344760;border-radius:10px;margin-top:8px;line-height:1.45;overflow-wrap:anywhere}
-.reply small{color:#9bb3d5}.hidden{display:none}video{width:100%;max-height:260px;object-fit:contain;background:#05080e;border-radius:10px;margin-top:10px}
-.foot{text-align:center;color:#8da2bf;font-size:12px;padding:18px}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#263d5e;color:#9fc4ff;font-size:12px}
-@media(max-width:480px){.row{flex-direction:column;gap:0}h1{font-size:23px}}
+:root{--bg:#090b14;--panel:#121a2b;--panel2:#19243a;--line:#2b3852;--txt:#f5f7ff;--muted:#aab5cb;--red:#ff526b;--purple:#9168ff;--green:#40d6a0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#27153e 0,transparent 34%),var(--bg);color:var(--txt);font-family:Inter,system-ui,Arial,sans-serif}button,input,select,textarea{font:inherit}a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:10;background:#090b14ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{font-weight:950;letter-spacing:1px;font-size:18px}.brand span{color:var(--red)}nav{display:flex;gap:22px;color:var(--muted);font-size:14px}nav a:hover{color:white}
+.btn{border:0;border-radius:11px;padding:11px 16px;background:linear-gradient(110deg,var(--red),#ff8150);color:white;font-weight:800;cursor:pointer;display:inline-flex;justify-content:center;align-items:center}.btn.secondary{background:#27334d}.btn.ghost{background:transparent;border:1px solid var(--line)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.hero{padding:68px 0 52px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}.eyebrow{font-size:12px;color:#ff9aaa;letter-spacing:2px;font-weight:900}h1{font-size:clamp(38px,6vw,64px);line-height:1.03;margin:14px 0}.grad{background:linear-gradient(90deg,#ff667d,#bd8cff);color:transparent;background-clip:text}.lead,.muted{color:var(--muted);line-height:1.65}.hero-box{border:1px solid #49385f;border-radius:24px;padding:25px;background:linear-gradient(145deg,#29183f,#111a2d 75%);min-height:245px;display:flex;flex-direction:column;justify-content:space-between}.fruit{font-size:72px;text-align:center;filter:drop-shadow(0 0 20px #9d65ff)}
+section{padding:30px 0 45px}.section-head{margin-bottom:18px}h2{font-size:28px;margin:0 0 7px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card,.panel{background:linear-gradient(155deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:17px;padding:20px}.tag{display:inline-block;border:1px solid #743847;background:#4d202d;color:#ff9cab;border-radius:30px;padding:4px 9px;font-size:11px;font-weight:900}.card h3{margin:13px 0 7px}.card p{color:var(--muted);font-size:14px;line-height:1.5;min-height:42px}.price{font-weight:950;font-size:23px;margin:14px 0}.price small{font-size:12px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:13px}.notice{border:1px solid #65502e;background:#2b2417;color:#f4dca9;border-radius:13px;padding:14px;font-size:13px;line-height:1.5;margin:20px 0}
+.hidden{display:none!important}.modal-bg{position:fixed;inset:0;background:#000b;z-index:30;display:grid;place-items:center;padding:15px}.modal{width:min(440px,100%);background:#121a2b;border:1px solid var(--line);border-radius:18px;padding:22px;max-height:90vh;overflow:auto}.modal h2{margin-bottom:15px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1120;border:1px solid var(--line);border-radius:10px;padding:11px;color:white;outline:none}textarea{min-height:85px;resize:vertical}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.tabs{display:flex;gap:8px;margin:12px 0}.tabs button{flex:1}.dashboard{padding:32px 0 55px}.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.item{padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item small{color:var(--muted)}.status{font-size:12px;color:#a6f0d6}.top-actions{display:flex;gap:8px;align-items:center}.empty{color:var(--muted);padding:12px 0;font-size:14px}
+@media(max-width:760px){nav{display:none}.hero{grid-template-columns:1fr;padding:48px 0 30px}.grid,.dash-grid{grid-template-columns:1fr}.top-actions .btn{padding:9px 11px;font-size:13px}}
 </style>
 </head>
 <body>
-<header><h1>🎬 Threads Studio 2.0</h1><p>Tạo video đọc bình luận • Không cần đăng nhập • Ưu tiên miễn phí</p></header>
-<main>
-<section class="card">
-<h2>01. Mở bài viết Threads</h2>
-<label for="postUrl">Link bài viết Threads</label>
-<input id="postUrl" type="url" inputmode="url" placeholder="https://www.threads.net/@ten/post/..." autocomplete="url">
-<button id="openPost">Mở bài viết Threads</button>
-<div class="notice" style="margin-top:12px">Threads không cung cấp API công khai để lấy bình luận của mọi bài viết chỉ bằng link khi chưa đăng nhập/cấp quyền. Vì vậy bản miễn phí không giả vờ tự lấy bình luận. Bạn mở bài viết, sao chép bình luận công khai rồi dán vào bước 2. Không cần mật khẩu hoặc kết nối tài khoản.</div>
-</section>
-<section class="card">
-<h2>02. Thêm bình luận</h2>
-<label for="comments">Dán bình luận (mỗi bình luận một dòng)</label>
-<textarea id="comments" placeholder="Bạn nói đúng quá!
-Mình cũng từng gặp trường hợp này.
-Cho mình xin thêm thông tin với..."></textarea>
-<div class="row"><button id="previewComments" class="secondary">Xem trước nội dung</button><button id="clearComments" class="secondary">Xóa nội dung</button></div>
-<div id="commentPreview" class="status">Chưa có bình luận.</div>
-</section>
-<section class="card">
-<h2>03. Thiết lập video</h2>
-<label for="videoTitle">Tiêu đề video</label><input id="videoTitle" maxlength="90" value="BÌNH LUẬN THREADS">
-<label for="background">Ảnh hoặc video nền (không bắt buộc)</label><input id="background" type="file" accept="image/*,video/*">
-<label for="audioFile">File giọng đọc / nhạc nền (MP3, WAV, M4A) – không bắt buộc</label><input id="audioFile" type="file" accept="audio/*">
-<p class="muted">Không có file âm thanh thì video xuất ra sẽ không có tiếng. Bản này không dùng API trả phí. Bạn có thể nghe thử bằng giọng đọc có sẵn trên điện thoại.</p>
-<label for="seconds">Thời gian mỗi bình luận khi không có âm thanh</label>
-<select id="seconds"><option value="3">3 giây</option><option value="4" selected>4 giây</option><option value="5">5 giây</option><option value="6">6 giây</option></select>
-<label for="quality">Chất lượng video</label>
-<select id="quality"><option value="720">720p – nhẹ, phù hợp điện thoại</option><option value="1080">1080p – nét hơn, cần máy khỏe</option></select>
-<div class="row"><button id="previewVoice" class="secondary">Nghe đọc thử bằng giọng máy</button><button id="stopVoice" class="secondary">Dừng giọng đọc</button></div>
-</section>
-<section class="card">
-<h2>04. Xuất video</h2>
-<button id="export">Tạo và tải video</button>
-<div id="exportStatus" class="status">Video dọc 9:16, định dạng MP4 nếu trình duyệt hỗ trợ; nếu không sẽ là WebM.</div>
-<video id="resultVideo" controls playsinline class="hidden"></video>
-<a id="download" class="hidden" style="display:block;color:#9fc4ff;margin-top:12px" download>Tải video đã tạo</a>
-</section>
-<section class="card"><h2>Trạng thái</h2><div class="status">● Ứng dụng chạy độc lập
-Không cần Meta for Developers.
-Không cần Threads OAuth.
-Không cần ElevenLabs API.
-Không thu thập mật khẩu hoặc thông tin đăng nhập.
-Xử lý nội dung và xuất video ngay trên trình duyệt.</div></section>
-<p class="foot">Threads Studio 2.0 • Bản miễn phí • Bình luận do người dùng cung cấp</p>
-</main>
+<header><div class="wrap nav"><a class="brand" href="#">TUANANH<span>SHOP</span></a><nav><a href="#dichvu">Dịch vụ</a><a href="#huongdan">Hướng dẫn</a><a href="#lienhe">Liên hệ</a></nav><div class="top-actions"><button class="btn secondary" id="accountBtn">Đăng nhập</button><button class="btn hidden" id="logoutBtn">Đăng xuất</button></div></div></header>
+<main class="wrap">
+<div id="publicView">
+<div class="hero"><div><div class="eyebrow">BLOX FRUITS • GAME SERVICE</div><h1>Hành trình biển cả<br><span class="grad">theo cách của bạn.</span></h1><p class="lead">TUANANH SHOP — trang giới thiệu dịch vụ hỗ trợ Blox Fruits. Chọn dịch vụ, gửi yêu cầu và theo dõi trạng thái đơn hàng sau khi đăng nhập.</p><a class="btn" href="#dichvu">Xem dịch vụ</a></div><div class="hero-box"><div class="fruit">🍈</div><div><div class="eyebrow">YOUR GAME. YOUR JOURNEY.</div><h2>TUANANH SHOP</h2><span class="muted">Rõ dịch vụ • Rõ giá • Hỗ trợ tận tình</span></div></div></div>
+<section id="dichvu"><div class="section-head"><h2>Dịch vụ hiện có</h2><p class="muted">Giá và dịch vụ được cập nhật bởi quản trị viên.</p></div><div class="grid" id="serviceList"><div class="empty">Đang tải danh sách dịch vụ...</div></div></section>
+<section id="huongdan"><h2>Cách đặt dịch vụ</h2><div class="grid"><div class="card"><span class="tag">01</span><h3>Chọn dịch vụ</h3><p>Xem nội dung và giá hiển thị trên shop.</p></div><div class="card"><span class="tag">02</span><h3>Đăng nhập và đặt đơn</h3><p>Điền yêu cầu cụ thể để shop tiếp nhận.</p></div><div class="card"><span class="tag">03</span><h3>Theo dõi đơn</h3><p>Xem trạng thái đơn trong khu vực tài khoản.</p></div></div></section>
+<section id="lienhe"><h2>Liên hệ shop</h2><div class="grid"><div class="card"><h3>💬 Messenger</h3><p>Điền link Facebook Page của shop trong file cấu hình.</p><a class="btn secondary" href="https://m.me/" target="_blank" rel="noopener">Mở Messenger</a></div><div class="card"><h3>📱 Zalo</h3><p>Điền số điện thoại hoặc link Zalo chính thức của shop.</p><a class="btn secondary" href="https://zalo.me/" target="_blank" rel="noopener">Mở Zalo</a></div><div class="card"><h3>🔐 An toàn tài khoản</h3><p>Không gửi mật khẩu Roblox, mã OTP hoặc cookie cho bất kỳ ai.</p><span class="tag">BẢO VỆ TÀI KHOẢN</span></div></div></section>
+<div class="notice">TUANANH SHOP là trang dịch vụ do người vận hành độc lập tạo, không phải website chính thức và không được Roblox/Blox Fruits bảo trợ. Hãy tuân thủ điều khoản của nền tảng. Không chia sẻ mật khẩu, mã OTP hoặc cookie.</div>
+</div>
+<div id="dashboard" class="dashboard hidden"><div class="section-head row"><div><div class="eyebrow">MEMBER AREA</div><h2 id="welcome">Tài khoản</h2><p class="muted" id="roleLabel"></p></div><button class="btn ghost" id="backHome">Về trang chủ</button></div>
+<div class="dash-grid"><div class="panel"><h3>Đặt dịch vụ</h3><form id="orderForm"><div class="field"><label>Dịch vụ</label><select id="orderService" required></select></div><div class="field"><label>Yêu cầu / ghi chú</label><textarea id="orderNote" placeholder="Ví dụ: mốc cấp độ mong muốn, nội dung cần hỗ trợ..." required></textarea></div><button class="btn" type="submit">Gửi đơn hàng</button></form></div><div class="panel"><h3>Đơn hàng của tôi</h3><div id="myOrders" class="empty">Chưa có đơn hàng.</div></div></div>
+<div id="adminArea" class="hidden" style="margin-top:18px"><div class="panel"><div class="row"><div><div class="eyebrow">ADMIN CONTROL</div><h2>Quản trị cửa hàng</h2></div><span class="tag">ADMIN</span></div>
+<div class="dash-grid"><div><h3>Thêm dịch vụ</h3><form id="serviceForm"><div class="field"><label>Tên dịch vụ</label><input id="serviceName" required maxlength="80"></div><div class="field"><label>Mô tả</label><textarea id="serviceDesc" required maxlength="300"></textarea></div><div class="field"><label>Giá (VNĐ)</label><input id="servicePrice" type="number" min="0" step="1000" required></div><button class="btn" type="submit">Thêm dịch vụ</button></form></div><div><h3>Danh sách dịch vụ</h3><div id="adminServices" class="empty">Chưa có dịch vụ.</div></div></div>
+<hr style="border-color:var(--line);margin:22px 0"><h3>Quản lý đơn hàng</h3><div id="allOrders" class="empty">Chưa có đơn hàng.</div></div></div>
+</div>
+</main><footer><div class="wrap">© 2026 TUANANH SHOP • Fan-made service website.</div></footer>
+
+<div class="modal-bg hidden" id="authModal"><div class="modal"><div class="row"><h2 id="authTitle">Đăng nhập</h2><button class="btn ghost" id="closeModal" style="flex:0 0 auto">✕</button></div><div class="tabs"><button class="btn secondary" id="showLogin">Đăng nhập</button><button class="btn ghost" id="showSignup">Tạo tài khoản</button></div><form id="authForm"><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Mật khẩu</label><input id="password" type="password" minlength="8" autocomplete="current-password" required></div><button class="btn" id="authSubmit" type="submit" style="width:100%">Đăng nhập</button></form><p class="muted" id="authMessage" style="font-size:13px"></p></div></div>
+<div class="modal-bg hidden" id="editModal"><div class="modal"><h2>Sửa dịch vụ</h2><form id="editForm"><input type="hidden" id="editId"><div class="field"><label>Tên dịch vụ</label><input id="editName" required></div><div class="field"><label>Mô tả</label><textarea id="editDesc" required></textarea></div><div class="field"><label>Giá (VNĐ)</label><input id="editPrice" type="number" min="0" required></div><div class="row"><button class="btn" type="submit">Lưu thay đổi</button><button class="btn ghost" type="button" id="cancelEdit">Hủy</button></div></form></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* THAY 2 GIÁ TRỊ NÀY BẰNG PROJECT URL VÀ ANON/PUBLISHABLE KEY TỪ SUPABASE.
+   Không bao giờ đặt service_role key hoặc mật khẩu admin trong mã trình duyệt. */
+const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
+const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("YOUR_") && !SUPABASE_ANON_KEY.includes("YOUR_");
+const db = configured ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
+let currentUser=null, isAdmin=false, services=[];
 const $=id=>document.getElementById(id);
-let resultUrl=null;
-function getComments(){return $('comments').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,100);}
-$('openPost').onclick=()=>{
-  try{
-    const u=new URL($('postUrl').value.trim());
-    if(!['threads.net','www.threads.net','threads.com','www.threads.com'].includes(u.hostname.toLowerCase())||u.protocol!=='https:')throw Error();
-    window.open(u.href,'_blank','noopener');
-  }catch{$('exportStatus').textContent='Link không hợp lệ. Hãy dùng link HTTPS từ threads.net hoặc threads.com.';}
-};
-$('previewComments').onclick=()=>{
-  const items=getComments(), box=$('commentPreview');box.innerHTML='';
-  if(!items.length){box.textContent='Chưa có bình luận.';return;}
-  const badge=document.createElement('span');badge.className='pill';badge.textContent=items.length+' bình luận';box.append(badge);
-  items.forEach((item,i)=>{const d=document.createElement('div');d.className='reply';const n=document.createElement('small');n.textContent='Bình luận '+(i+1);const p=document.createElement('div');p.textContent=item;d.append(n,document.createElement('br'),p);box.append(d);});
-};
-$('clearComments').onclick=()=>{$('comments').value='';$('commentPreview').textContent='Đã xóa nội dung.';};
-$('previewVoice').onclick=()=>{
-  const items=getComments();if(!items.length){alert('Hãy dán bình luận trước.');return;}
-  if(!('speechSynthesis'in window)){alert('Trình duyệt không hỗ trợ đọc văn bản.');return;}
-  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(items.join('. '));u.lang='vi-VN';u.rate=1;speechSynthesis.speak(u);
-};
-$('stopVoice').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();};
-function drawCover(ctx,source,w,h,sw,sh){const scale=Math.max(w/sw,h/sh),dw=sw*scale,dh=sh*scale;ctx.drawImage(source,(w-dw)/2,(h-dh)/2,dw,dh);}
-function wrapText(ctx,text,maxWidth){const words=text.split(/\s+/),lines=[];let line='';for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>maxWidth&&line){lines.push(line);line=word;}else line=next;}if(line)lines.push(line);return lines;}
-$('export').onclick=async()=>{
- const items=getComments();if(!items.length){alert('Hãy dán ít nhất một bình luận.');return;}
- if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){alert('Trình duyệt chưa hỗ trợ xuất video. Hãy cập nhật Chrome hoặc Cốc Cốc.');return;}
- const file=$('background').files[0],audioFile=$('audioFile').files[0],size=Number($('quality').value);
- const canvas=document.createElement('canvas');canvas.width=size===1080?1080:720;canvas.height=size===1080?1920:1280;
- const ctx=canvas.getContext('2d');let bg=null,bgVideo=null,bgUrl=null,audioContext=null;
- $('export').disabled=true;
- try{
-  if(file){
-    bgUrl=URL.createObjectURL(file);
-    if(file.type.startsWith('video/')){
-      bgVideo=document.createElement('video');bgVideo.src=bgUrl;bgVideo.muted=true;bgVideo.loop=true;bgVideo.playsInline=true;
-      await new Promise((resolve,reject)=>{bgVideo.onloadeddata=resolve;bgVideo.onerror=reject;});await bgVideo.play();
-    }else{bg=new Image();bg.src=bgUrl;await bg.decode();}
-  }
-  let audioEl=null,audioDestination=null;
-  if(audioFile){
-    audioEl=new Audio(URL.createObjectURL(audioFile));audioEl.preload='auto';
-    await new Promise((resolve,reject)=>{audioEl.oncanplaythrough=resolve;audioEl.onerror=reject;});
-    audioContext=new(window.AudioContext||window.webkitAudioContext)();await audioContext.resume();
-    const source=audioContext.createMediaElementSource(audioEl);audioDestination=audioContext.createMediaStreamDestination();source.connect(audioDestination);source.connect(audioContext.destination);
-  }
-  const stream=canvas.captureStream(30);if(audioDestination)audioDestination.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
-  const types=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
-  const mime=types.find(t=>MediaRecorder.isTypeSupported(t));if(!mime)throw Error('Thiết bị không hỗ trợ định dạng xuất video.');
-  const recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:size===1080?5000000:2500000}),chunks=[];
-  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
-  const title=$('videoTitle').value.trim(),per=Number($('seconds').value)*1000,total=items.length*per;
-  let start=performance.now(),raf=0,stopped=false;
-  const render=now=>{
-    const elapsed=now-start;
-    const idx=audioEl?Math.min(items.length-1,Math.floor((elapsed/Math.max(1,audioEl.duration*1000))*items.length)):Math.min(items.length-1,Math.floor(elapsed/per));
-    ctx.fillStyle='#111827';ctx.fillRect(0,0,canvas.width,canvas.height);
-    if(bgVideo&&bgVideo.readyState>=2)drawCover(ctx,bgVideo,canvas.width,canvas.height,bgVideo.videoWidth,bgVideo.videoHeight);
-    else if(bg)drawCover(ctx,bg,canvas.width,canvas.height,bg.naturalWidth,bg.naturalHeight);
-    else{const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);g.addColorStop(0,'#14213a');g.addColorStop(1,'#321d4a');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);}
-    ctx.fillStyle='rgba(0,0,0,.48)';ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.textAlign='center';ctx.shadowColor='#000';ctx.shadowBlur=8;ctx.fillStyle='#9fc4ff';ctx.font='bold '+Math.round(canvas.width*.047)+'px Arial';ctx.fillText(title||'BÌNH LUẬN THREADS',canvas.width/2,canvas.height*.17);
-    ctx.font='bold '+Math.round(canvas.width*.052)+'px Arial';const lines=wrapText(ctx,items[idx],canvas.width*.78),lh=canvas.width*.075,boxH=lines.length*lh+canvas.height*.10,top=(canvas.height-boxH)/2;
-    ctx.fillStyle='rgba(5,10,20,.80)';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(canvas.width*.07,top,canvas.width*.86,boxH,26);else ctx.rect(canvas.width*.07,top,canvas.width*.86,boxH);ctx.fill();
-    ctx.fillStyle='#fff';lines.forEach((line,j)=>ctx.fillText(line,canvas.width/2,top+canvas.height*.055+j*lh));ctx.shadowBlur=0;
-    ctx.fillStyle='#dce8ff';ctx.font=Math.round(canvas.width*.03)+'px Arial';ctx.fillText((idx+1)+' / '+items.length,canvas.width/2,canvas.height*.91);
-    if(!stopped)raf=requestAnimationFrame(render);
-  };
-  const stop=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(raf);if(recorder.state!=='inactive')recorder.stop();if(bgVideo)bgVideo.pause();};
-  recorder.onstop=()=>{
-    const blob=new Blob(chunks,{type:recorder.mimeType});if(resultUrl)URL.revokeObjectURL(resultUrl);resultUrl=URL.createObjectURL(blob);
-    $('resultVideo').src=resultUrl;$('resultVideo').classList.remove('hidden');const ext=blob.type.includes('mp4')?'mp4':'webm';
-    $('download').href=resultUrl;$('download').download='threads-studio-2.0.'+ext;$('download').textContent='⬇ Tải video '+ext.toUpperCase();$('download').classList.remove('hidden');
-    $('exportStatus').textContent='Hoàn tất! Video '+size+'p đã được tạo. Định dạng: '+ext.toUpperCase()+'.';
-    $('export').disabled=false;if(audioContext)audioContext.close();if(bgUrl)URL.revokeObjectURL(bgUrl);
-  };
-  recorder.start(250);raf=requestAnimationFrame(render);$('exportStatus').textContent='Đang tạo video... giữ trang mở đến khi hoàn tất.';
-  if(audioEl){audioEl.onended=stop;await audioEl.play();}else{setTimeout(stop,total);}
- }catch(err){$('exportStatus').textContent='Không thể xuất video: '+err.message;$('export').disabled=false;if(bgUrl)URL.revokeObjectURL(bgUrl);if(audioContext)audioContext.close();}
-};
+const money=n=>Number(n||0).toLocaleString("vi-VN")+"đ";
+function msg(s){alert(s)}
+function openAuth(mode="login"){$("authModal").classList.remove("hidden");setAuthMode(mode)}
+function closeAuth(){$("authModal").classList.add("hidden")}
+function setAuthMode(mode){const signup=mode==="signup";$("authTitle").textContent=signup?"Tạo tài khoản":"Đăng nhập";$("authSubmit").textContent=signup?"Đăng ký":"Đăng nhập";$("password").autocomplete=signup?"new-password":"current-password";$("authMessage").textContent=signup?"Mật khẩu tối thiểu 8 ký tự.":" "}
+$("accountBtn").onclick=()=>openAuth();$("closeModal").onclick=closeAuth;$("showLogin").onclick=()=>setAuthMode("login");$("showSignup").onclick=()=>setAuthMode("signup");$("logoutBtn").onclick=async()=>{if(db)await db.auth.signOut();currentUser=null;refreshUI()};$("backHome").onclick=()=>{$("dashboard").classList.add("hidden");$("publicView").classList.remove("hidden")};
+$("authForm").onsubmit=async e=>{e.preventDefault();if(!db)return msg("Website chưa kết nối Supabase. Hãy làm theo README_SETUP.txt.");const email=$("email").value.trim(),password=$("password").value;const signup=$("authTitle").textContent.includes("Tạo");$("authSubmit").disabled=true;let result=signup?await db.auth.signUp({email,password}):await db.auth.signInWithPassword({email,password});$("authSubmit").disabled=false;if(result.error)return $("authMessage").textContent=result.error.message;if(signup){$("authMessage").textContent="Đăng ký thành công. Nếu bật xác nhận email, hãy kiểm tra hộp thư.";return}currentUser=result.data.user;closeAuth();await refreshUI()};
+async function loadServices(){if(!db){services=[{id:"demo1",name:"Cày cấp độ",description:"Hỗ trợ theo mốc cấp độ bạn lựa chọn.",price:20000},{id:"demo2",name:"Farm nguyên liệu",description:"Hỗ trợ tìm và farm nguyên liệu trong game.",price:15000},{id:"demo3",name:"Hỗ trợ nhiệm vụ",description:"Hỗ trợ các mục tiêu trong game.",price:25000}];renderServices();return}const {data,error}=await db.from("services").select("*").eq("active",true).order("created_at",{ascending:false});if(error){console.error(error);return}services=data||[];renderServices()}
+function renderServices(){const list=$("serviceList"),sel=$("orderService");list.innerHTML="";sel.innerHTML="";if(!services.length)list.innerHTML='<div class="empty">Shop chưa đăng dịch vụ nào.</div>';services.forEach(s=>{const el=document.createElement("article");el.className="card";el.innerHTML=`<span class="tag">DỊCH VỤ</span><h3></h3><p></p><div class="price"></div><button class="btn orderBtn">Đặt dịch vụ</button>`;el.querySelector("h3").textContent=s.name;el.querySelector("p").textContent=s.description;el.querySelector(".price").textContent=money(s.price);el.querySelector("button").onclick=()=>currentUser?($("orderService").value=s.id,$("publicView").classList.add("hidden"),$("dashboard").classList.remove("hidden")):openAuth();list.appendChild(el);const o=document.createElement("option");o.value=s.id;o.textContent=s.name+" — "+money(s.price);sel.appendChild(o)})}
+async function refreshUI(){if(!db){$("accountBtn").textContent="Đăng nhập";$("logoutBtn").classList.add("hidden");return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;if(!currentUser){$("accountBtn").textContent="Đăng nhập";$("logoutBtn").classList.add("hidden");$("dashboard").classList.add("hidden");$("publicView").classList.remove("hidden");return}$("accountBtn").textContent="Tài khoản";$("logoutBtn").classList.remove("hidden");const {data:profile}=await db.from("profiles").select("role").eq("id",currentUser.id).maybeSingle();isAdmin=profile?.role==="admin";$("welcome").textContent=currentUser.email;$("roleLabel").textContent=isAdmin?"Quản trị viên":"Thành viên";$("adminArea").classList.toggle("hidden",!isAdmin);$("publicView").classList.add("hidden");$("dashboard").classList.remove("hidden");await loadServices();await loadOrders();if(isAdmin)await loadAdminData()}
+$("orderForm").onsubmit=async e=>{e.preventDefault();if(!db)return msg("Cần kết nối Supabase để lưu đơn hàng.");const {error}=await db.from("orders").insert({user_id:currentUser.id,service_id:$("orderService").value,note:$("orderNote").value.trim()});if(error)return msg(error.message);$("orderNote").value="";msg("Đã gửi đơn. Shop sẽ cập nhật trạng thái.");await loadOrders()};
+async function loadOrders(){if(!db||!currentUser)return;let q=db.from("orders").select("id,note,status,created_at,services(name,price)").order("created_at",{ascending:false});if(!isAdmin)q=q.eq("user_id",currentUser.id);const {data,error}=await q;if(error)return console.error(error);const target=isAdmin?$("allOrders"):$("myOrders");target.innerHTML="";if(!data?.length){target.textContent="Chưa có đơn hàng.";return}data.forEach(o=>{const d=document.createElement("div");d.className="item";const service=o.services?.name||"Dịch vụ";d.innerHTML=`<b></b><br><small></small><div class="row" style="margin-top:8px"></div>`;d.querySelector("b").textContent=service+" · "+money(o.services?.price);d.querySelector("small").textContent=o.note+" • "+new Date(o.created_at).toLocaleString("vi-VN");const row=d.querySelector(".row");const st=document.createElement("span");st.className="status";st.textContent="Trạng thái: "+o.status;row.appendChild(st);if(isAdmin){const select=document.createElement("select");["Mới","Đang xử lý","Hoàn thành","Đã hủy"].forEach(x=>{const op=document.createElement("option");op.value=x;op.textContent=x;op.selected=x===o.status;select.appendChild(op)});select.onchange=async()=>{const {error}=await db.from("orders").update({status:select.value}).eq("id",o.id);if(error)msg(error.message);else await loadOrders()};row.appendChild(select)}target.appendChild(d)})}
+$("serviceForm").onsubmit=async e=>{e.preventDefault();const {error}=await db.from("services").insert({name:$("serviceName").value.trim(),description:$("serviceDesc").value.trim(),price:Number($("servicePrice").value)});if(error)return msg(error.message);e.target.reset();await loadServices();await loadAdminData()};
+async function loadAdminData(){const {data,error}=await db.from("services").select("*").order("created_at",{ascending:false});if(error)return console.error(error);const box=$("adminServices");box.innerHTML="";(data||[]).forEach(s=>{const d=document.createElement("div");d.className="item";d.innerHTML="<b></b><br><small></small><div class='row' style='margin-top:8px'><button class='btn secondary'>Sửa</button><button class='btn ghost'>Ẩn</button></div>";d.querySelector("b").textContent=s.name;d.querySelector("small").textContent=money(s.price)+" · "+(s.active?"Đang hiển thị":"Đã ẩn");d.querySelectorAll("button")[0].onclick=()=>{ $("editId").value=s.id;$("editName").value=s.name;$("editDesc").value=s.description;$("editPrice").value=s.price;$("editModal").classList.remove("hidden")};d.querySelectorAll("button")[1].onclick=async()=>{const {error}=await db.from("services").update({active:!s.active}).eq("id",s.id);if(error)msg(error.message);else{await loadServices();await loadAdminData()}};box.appendChild(d)})}
+$("editForm").onsubmit=async e=>{e.preventDefault();const {error}=await db.from("services").update({name:$("editName").value.trim(),description:$("editDesc").value.trim(),price:Number($("editPrice").value)}).eq("id",$("editId").value);if(error)return msg(error.message);$("editModal").classList.add("hidden");await loadServices();await loadAdminData()};
+$("cancelEdit").onclick=()=>$("editModal").classList.add("hidden");
+(async()=>{await loadServices();if(db){db.auth.onAuthStateChange(()=>setTimeout(refreshUI,0));await refreshUI()}else{$("serviceList").insertAdjacentHTML("beforeend",'<p class="muted" style="grid-column:1/-1">Đang ở chế độ xem thử. Kết nối Supabase để bật đăng ký, đăng nhập, đặt đơn và Admin.</p>')}})();
 </script>
 </body></html>
